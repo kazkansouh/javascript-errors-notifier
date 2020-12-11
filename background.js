@@ -74,15 +74,17 @@ function handleInitRequest(data, sender, sendResponse) {
 		if(chrome.runtime.lastError) {
 			return;
 		}
-		chrome.pageAction.setTitle({
+		chrome.browserAction.setTitle({
 			tabId: sender.tab.id,
 			title: 'No errors on this page'
 		});
-		chrome.pageAction.setPopup({
+		chrome.browserAction.setPopup({
 			tabId: sender.tab.id,
 			popup: 'popup.html?host=' + encodeURIComponent(tabHost) + '&tabId=' + sender.tab.id
 		});
-		chrome.pageAction.show(sender.tab.id);
+		chrome.browserAction.setBadgeText({
+			tabId: sender.tab.id
+		});
 	});
 	sendResponse({
 		showIcon: typeof localStorage['icon_' + tabHost] != 'undefined' ? localStorage['icon_' + tabHost] : localStorage['showIcon'],
@@ -172,18 +174,25 @@ function handleErrorsRequest(data, sender, sendResponse) {
 			return;
 		}
 
-		chrome.pageAction.setTitle({
+		chrome.browserAction.setTitle({
 			tabId: sender.tab.id,
 			title: 'There are some errors on this page. Click to see details.'
 		});
 
-		chrome.pageAction.setIcon({
+		chrome.browserAction.setIcon({
 			tabId: sender.tab.id,
 			path: {
 				"19": "img/error_19.png",
 				"38": "img/error_38.png"
 			}
 		});
+
+		if (popupErrors.length > 1) {
+			chrome.browserAction.setBadgeText({
+				tabId: sender.tab.id,
+				text: '' + popupErrors.length
+			});
+		}
 
 		var errorsHtml = popupErrors.join('<br/><br/>');
 
@@ -196,12 +205,10 @@ function handleErrorsRequest(data, sender, sendResponse) {
 
 		var popupUri = 'popup.html?errors=' + encodeURIComponent(errorsHtml) + '&host=' + encodeURIComponent(tabHost) + '&tabId=' + sender.tab.id;
 
-		chrome.pageAction.setPopup({
+		chrome.browserAction.setPopup({
 			tabId: sender.tab.id,
 			popup: popupUri
 		});
-
-		chrome.pageAction.show(sender.tab.id);
 
 		sendResponse(chrome.extension.getURL(popupUri));
 	});

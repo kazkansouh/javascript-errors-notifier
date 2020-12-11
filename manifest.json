@@ -28,7 +28,7 @@
 		"48": "img/error_48.png"
 	},
 	"incognito": "spanning",
-	"page_action": {
+	"browser_action": {
 		"default_icon": {
 			"19": "img/error_19_disabled.png",
 			"38": "img/error_38_disabled.png"
