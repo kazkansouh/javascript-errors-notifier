@@ -1,6 +1,25 @@
 JavaScript Errors Notifier
 ==========================
 
+This is a modified version of *JavaScript Errors Notifier* to provide
+the following:
+
+* Records `XMLHttpRequest` requests where `>= 400` status code.
+* Optionally tracks `console.log`, `console.warn` and `console.info`.
+* Shows number of errors (or log items if enabled) over icon in toolbar.
+
+### Installation
+
+It is required to manually install this extension by checking out
+repo, and importing into Chrome by navigating to
+`chrome://extensions/` and selecting `Load unpacked`.
+
+
+# Original readme below:
+
+JavaScript Errors Notifier
+==========================
+
 [![Author](http://img.shields.io/badge/author-@barbushin-blue.svg?style=flat-square)](https://www.linkedin.com/in/barbushin)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jafmfknfnkoekkdocjiaipcnmkklaajd.svg?maxAge=2592000&style=flat-square)](https://chrome.google.com/webstore/detail/javascript-errors-notifie/jafmfknfnkoekkdocjiaipcnmkklaajd)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
