@@ -98,7 +98,7 @@ new function() {
 
 	function codeToInject() {
 
-		function handleCustomError(message, stack) {
+		function handleCustomError(message, stack, islog) {
 			if(!stack) {
 				stack = (new Error()).stack.split("\n").splice(2, 4).join("\n");
 			}
@@ -112,7 +112,8 @@ new function() {
 					url: callSrc[1],
 					line: callSrc[2],
 					col: callSrc[3],
-					text: message
+					text: message,
+					islog: islog
 				}
 			}));
 		}
@@ -137,6 +138,40 @@ new function() {
 			handleCustomError(argsArray.length == 1 && typeof argsArray[0] == 'string' ? argsArray[0] : JSON.stringify(argsArray.length == 1 ? argsArray[0] : argsArray));
 		};
 
+		// handle console.warn()
+		var consoleWarnFunc = window.console.warn;
+		window.console.warn = function() {
+			var argsArray = [];
+			for(var i in arguments) { // because arguments.join() not working! oO
+				argsArray.push(arguments[i]);
+			}
+			consoleWarnFunc.apply(console, argsArray);
+		    handleCustomError(argsArray.length == 1 && typeof argsArray[0] == 'string' ? argsArray[0] : JSON.stringify(argsArray.length == 1 ? argsArray[0] : argsArray), null, true);
+		};
+
+		// handle console.info()
+		var consoleInfoFunc = window.console.info;
+		window.console.info = function() {
+			var argsArray = [];
+			for(var i in arguments) { // because arguments.join() not working! oO
+				argsArray.push(arguments[i] + ' :():');
+			}
+			consoleInfoFunc.apply(console, argsArray);
+			handleCustomError(argsArray.length == 1 && typeof argsArray[0] == 'string' ? argsArray[0] : JSON.stringify(argsArray.length == 1 ? argsArray[0] : argsArray), null, true);
+		};
+
+		// handle console.log()
+		var consoleLogFunc = window.console.log;
+		window.console.log = function() {
+			var argsArray = [];
+			for(var i in arguments) { // because arguments.join() not working! oO
+				argsArray.push(arguments[i]);
+			}
+			consoleLogFunc.apply(console, argsArray);
+			handleCustomError(argsArray.length == 1 && typeof argsArray[0] == 'string' ? argsArray[0] : JSON.stringify(argsArray.length == 1 ? argsArray[0] : argsArray), null, true);
+		};
+
+
 		// handle uncaught errors
 		window.addEventListener('error', function(e) {
 			if(e.filename) {
@@ -146,7 +181,8 @@ new function() {
 						url: e.filename,
 						line: e.lineno,
 						col: e.colno,
-						text: e.message
+						text: e.message,
+						islog: false
 					}
 				}));
 			}

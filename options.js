@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		'ignoreExternal',
 		'ignoreBlockedByClient',
 		'ignoreConnectionRefused',
+		'ignoreLog',
 		'popupMaxWidth',
 		'popupMaxHeight'
 	];

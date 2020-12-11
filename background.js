@@ -16,6 +16,7 @@ function initDefaultOptions() {
 		showIcon: true,
 		ignore404others: true,
 		ignoreBlockedByClient: true,
+		ignoreLog: true,
 		relativeErrorUrl: true,
 		popupMaxWidth: 70,
 		popupMaxHeight: 40
@@ -117,6 +118,11 @@ function handleErrorsRequest(data, sender, sendResponse) {
 			popupErrors.unshift('Failed to load: ' + htmlentities(error.url));
 		}
 		else {
+
+			if (error.islog && localStorage['ignoreLog']) {
+				continue;
+			}
+
 			error.text = error.text.replace(/^Uncaught /, '').replace(/^Error: /, '');
 
 			var errorHtml = localStorage['linkStackOverflow']
